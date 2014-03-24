@@ -333,7 +333,7 @@ sub error($) { shift->{error} }
 
 =head1 AUTHOR
 
-David Zurborg, C<< <post at david-zurb.org> >>
+David Zurborg, C<< <zurborg at cpan.org> >>
 
 =head1 BUGS
 

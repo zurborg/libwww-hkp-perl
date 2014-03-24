@@ -4,7 +4,7 @@ use ExtUtils::MakeMaker;
 
 WriteMakefile(
     NAME                => 'Net::HKP',
-    AUTHOR              => 'David Zurborg <post@david-zurb.org>',
+    AUTHOR              => 'David Zurborg <zurborg@cpan.org>',
     VERSION_FROM        => 'lib/Net/HKP.pm',
     ABSTRACT_FROM       => 'lib/Net/HKP.pm',
     ($ExtUtils::MakeMaker::VERSION >= 6.3002
