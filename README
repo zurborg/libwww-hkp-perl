@@ -1,0 +1,47 @@
+Net-HKP
+
+This module implements the IETF draft of the OpenPGP HTTP Keyserver Protocol.
+
+More Informationen about HKP is available at L<http://tools.ietf.org/html/draft-shaw-openpgp-hkp-00>.
+
+
+INSTALLATION
+
+To install this module, run the following commands:
+
+	perl Makefile.PL
+	make
+	make test
+	make install
+
+SUPPORT AND DOCUMENTATION
+
+After installing, you can find documentation for this module with the
+perldoc command.
+
+    perldoc Net::HKP
+
+You can also look for information at:
+
+    Redmine, Hompage of the module
+        http://development.david-zurb.org/projects/libnet-hkp-perl
+
+    RT, CPAN's request tracker
+        http://rt.cpan.org/NoAuth/Bugs.html?Dist=Net-HKP
+
+    AnnoCPAN, Annotated CPAN documentation
+        http://annocpan.org/dist/Net-HKP
+
+    CPAN Ratings
+        http://cpanratings.perl.org/d/Net-HKP
+
+    Search CPAN
+        http://search.cpan.org/dist/Net-HKP/
+
+
+COPYRIGHT AND LICENCE
+
+Copyright (C) 2014 David Zurborg
+
+This program is not really free software; you can redistribute it and/or modify it under certain circumstances. See file LICENSE for details.
+
