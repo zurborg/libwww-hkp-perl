@@ -116,7 +116,7 @@ sub _parse_mr($$$) {
 	    $key = $1;
 	    $keyn++;
 	    my ($algo, $keylen, $created, $expires, $flags, $ok) = ($2, $3, $4, $5, $6, undef);
-	    $ok = (($created and $created > time) or ($expires and $expires < time) or (length $flags) ? 0 : 1);
+	    $ok = ((($created and $created > time) or ($expires and $expires < time) or (length $flags)) ? 0 : 1);
 	    if ($filter_ok and !$ok) {
 		$key = undef;
 		next;
@@ -135,7 +135,7 @@ sub _parse_mr($$$) {
 	} elsif ($line =~ /^uid:([^:]*):(\d*):(\d*):([der]*)$/i) {
 	    next unless defined $key;
 	    my ($uid, $created, $expires, $flags, $ok) = ($1, $2, $3, $4, undef);
-	    $ok = (($created and $created > time) or ($expires and $expires < time) or (length $flags) ? 0 : 1);
+	    $ok = ((($created and $created > time) or ($expires and $expires < time) or (length $flags)) ? 0 : 1);
 	    next if $filter_ok and !$ok;
 	    push @{ $keys->{$key}->{uids} } => {
 		uid => uri_unescape($uid),
