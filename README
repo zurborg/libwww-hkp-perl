@@ -1,4 +1,4 @@
-Net-HKP
+WWW-HKP
 
 This module implements the IETF draft of the OpenPGP HTTP Keyserver Protocol.
 
@@ -19,24 +19,24 @@ SUPPORT AND DOCUMENTATION
 After installing, you can find documentation for this module with the
 perldoc command.
 
-    perldoc Net::HKP
+    perldoc WWW::HKP
 
 You can also look for information at:
 
     Redmine, Hompage of the module
-        http://development.david-zurb.org/projects/libnet-hkp-perl
+        http://development.david-zurb.org/projects/libwww-hkp-perl
 
     RT, CPAN's request tracker
-        http://rt.cpan.org/NoAuth/Bugs.html?Dist=Net-HKP
+        http://rt.cpan.org/NoAuth/Bugs.html?Dist=WWW-HKP
 
     AnnoCPAN, Annotated CPAN documentation
-        http://annocpan.org/dist/Net-HKP
+        http://annocpan.org/dist/WWW-HKP
 
     CPAN Ratings
-        http://cpanratings.perl.org/d/Net-HKP
+        http://cpanratings.perl.org/d/WWW-HKP
 
     Search CPAN
-        http://search.cpan.org/dist/Net-HKP/
+        http://search.cpan.org/dist/WWW-HKP/
 
 
 COPYRIGHT AND LICENCE

@@ -3,10 +3,10 @@ use warnings;
 use ExtUtils::MakeMaker;
 
 WriteMakefile(
-    NAME                => 'Net::HKP',
+    NAME                => 'WWW::HKP',
     AUTHOR              => 'David Zurborg <zurborg@cpan.org>',
-    VERSION_FROM        => 'lib/Net/HKP.pm',
-    ABSTRACT_FROM       => 'lib/Net/HKP.pm',
+    VERSION_FROM        => 'lib/WWW/HKP.pm',
+    ABSTRACT_FROM       => 'lib/WWW/HKP.pm',
     ($ExtUtils::MakeMaker::VERSION >= 6.3002
       ? ('LICENSE'=> 'perl')
       : ()),
@@ -18,5 +18,5 @@ WriteMakefile(
         'URI::Escape' => 3.31
     },
     dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
-    clean               => { FILES => 'Net-HKP-*' },
+    clean               => { FILES => 'WWW-HKP-*' },
 );

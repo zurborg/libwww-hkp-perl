@@ -1,4 +1,4 @@
-package Net::HKP;
+package WWW::HKP;
 
 use warnings;
 use strict;
@@ -11,7 +11,7 @@ use URI::Escape 3.31;
 
 =head1 NAME
 
-Net::HKP - Interface to HTTP Keyserver Protocol (HKP)
+WWW::HKP - Interface to HTTP Keyserver Protocol (HKP)
 
 =head1 VERSION
 
@@ -24,9 +24,9 @@ our $VERSION = '0.02';
 
 =head1 SYNOPSIS
 
-    use Net::HKP;
+    use WWW::HKP;
 
-    my $hkp = Net::HKP->new();
+    my $hkp = WWW::HKP->new();
     
     $hkp->query(index => 'foo@bar.baz');
     $hkp->query(get => 'DEADBEEF');
@@ -41,16 +41,16 @@ More Informationen about HKP is available at L<http://tools.ietf.org/html/draft-
 
 =head2 new([%options])
 
-The C<new()> constructor method instanciates a new C<Net::HKP> object. The following example shows available options and its default values.
+The C<new()> constructor method instanciates a new C<WWW::HKP> object. The following example shows available options and its default values.
 
-    my $hkp = Net::HKP->new(
+    my $hkp = WWW::HKP->new(
 	host => 'localhost',
 	port => 11371
     );
 
 In most cases you just need to set the I<host> parameter:
 
-    my $hkp = new Net::HKP host => 'pool.sks-keyservers.net';
+    my $hkp = new WWW::HKP host => 'pool.sks-keyservers.net';
 
 =cut
 
@@ -337,14 +337,14 @@ David Zurborg, C<< <zurborg at cpan.org> >>
 
 =head1 BUGS
 
-Please report any bugs or feature requests trough my project management tool at L<http://development.david-zurb.org/projects/libnet-hkp-perl/issues/new>. I will be notified, and then you'll
+Please report any bugs or feature requests trough my project management tool at L<http://development.david-zurb.org/projects/libwww-hkp-perl/issues/new>. I will be notified, and then you'll
 automatically be notified of progress on your bug as I make changes.
 
 =head1 SUPPORT
 
 You can find documentation for this module with the perldoc command.
 
-    perldoc Net::HKP
+    perldoc WWW::HKP
 
 You can also look for information at:
 
@@ -352,23 +352,23 @@ You can also look for information at:
 
 =item * Redmine: Homepage of this module
 
-L<http://development.david-zurb.org/projects/libnet-hkp-perl>
+L<http://development.david-zurb.org/projects/libwww-hkp-perl>
 
 =item * RT: CPAN's request tracker
 
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Net-HKP>
+L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=WWW-HKP>
 
 =item * AnnoCPAN: Annotated CPAN documentation
 
-L<http://annocpan.org/dist/Net-HKP>
+L<http://annocpan.org/dist/WWW-HKP>
 
 =item * CPAN Ratings
 
-L<http://cpanratings.perl.org/d/Net-HKP>
+L<http://cpanratings.perl.org/d/WWW-HKP>
 
 =item * Search CPAN
 
-L<http://search.cpan.org/dist/Net-HKP/>
+L<http://search.cpan.org/dist/WWW-HKP/>
 
 =back
 
@@ -380,4 +380,4 @@ This program is not really free software; you can redistribute it and/or modify 
 
 =cut
 
-1; # End of Net::HKP
+1; # End of WWW::HKP
