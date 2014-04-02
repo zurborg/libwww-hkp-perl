@@ -25,7 +25,7 @@ our $VERSION = '0.02';
 =head1 SYNOPSIS
 
     use WWW::HKP;
-
+    
     my $hkp = WWW::HKP->new();
     
     $hkp->query(index => 'foo@bar.baz');
