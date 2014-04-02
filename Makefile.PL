@@ -4,7 +4,6 @@ use ExtUtils::MakeMaker;
 
 WriteMakefile(
     NAME                => 'WWW::HKP',
-    DISTNAME            => 'libwww-hkp-perl',
     AUTHOR              => 'David Zurborg <zurborg@cpan.org>',
     VERSION_FROM        => 'lib/WWW/HKP.pm',
     ABSTRACT_FROM       => 'lib/WWW/HKP.pm',
@@ -19,5 +18,5 @@ WriteMakefile(
         'URI::Escape' => 3.31
     },
     dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
-    clean               => { FILES => 'libwww-hkp-perl-*' },
+    clean               => { FILES => 'WWW-HKP-*' },
 );
