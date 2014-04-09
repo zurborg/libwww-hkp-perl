@@ -8,7 +8,7 @@ WriteMakefile(
     VERSION_FROM        => 'lib/WWW/HKP.pm',
     ABSTRACT_FROM       => 'lib/WWW/HKP.pm',
     ($ExtUtils::MakeMaker::VERSION >= 6.3002
-      ? ('LICENSE'=> 'perl')
+      ? ('LICENSE'=> 'ISC')
       : ()),
     PL_FILES            => {},
     PREREQ_PM => {

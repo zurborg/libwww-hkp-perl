@@ -376,7 +376,7 @@ L<http://search.cpan.org/dist/WWW-HKP/>
 
 Copyright 2014 David Zurborg, all rights reserved.
 
-This program is not really free software; you can redistribute it and/or modify it under certain circumstances. See file F<LICENSE> for details.
+This program is free software; you can redistribute it and/or modify it under the terms of the ISC license.
 
 =cut
 
