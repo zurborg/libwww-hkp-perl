@@ -1,5 +1,5 @@
-^DevelopmentOptions.pm$
+^config/DevelopmentOptions.pm$
 ^Makefile-Development.PL
 ^MANIFEST.SKIP$
 ^MANIFEST.IGNORE$
-^(README|INSTALL)\.pod$
+^documentation/(README|INSTALL)\.pod$

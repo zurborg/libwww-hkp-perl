@@ -1,6 +1,6 @@
 lib/WWW/HKP.pm
 LICENSE
-BuildOptions.pm
+config/BuildOptions.pm
 Makefile.PL
 MANIFEST
 README

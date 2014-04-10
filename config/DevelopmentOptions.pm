@@ -5,7 +5,7 @@ addopt(
 	README_SECTIONS     => [ 'NAME', 'VERSION', 'DESCRIPTION', 'AUTHOR', 'SUPPORT', 'COPYRIGHT & LICENSE' ],
     },
     depend => {
-	'$(FIRST_MAKEFILE)' => 'BuildOptions.pm DevelopmentOptions.pm',
+	'$(FIRST_MAKEFILE)' => 'config/BuildOptions.pm config/DevelopmentOptions.pm',
     },
 );
 
@@ -42,20 +42,20 @@ sub MY::postamble {
 				,$MM->{VERSION}
 			]
 		},
-		'README.pod' => {
+		'documentation/README.pod' => {
 			preq => [ $MM->{ABSTRACT_FROM} ],
 			cmds => [
 				'podselect '.join(' ' => map { "-section '$_'" } @{ $options{README_SECTIONS} }).' -- "$<" > "$@"'
 			]
 		},
 		README => {
-			preq => [qw[ README.pod ]],
+			preq => [qw[ documentation/README.pod ]],
 			cmds => [
 				'pod2readme "$<" "$@" README'
 			]
 		},
 		INSTALL => {
-			preq => [qw[ INSTALL.pod ]],
+			preq => [qw[ documentation/INSTALL.pod ]],
 			cmds => [
 				'pod2readme "$<" "$@" README'
 			]

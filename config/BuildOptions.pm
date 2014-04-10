@@ -5,6 +5,7 @@
     ABSTRACT_FROM       => 'lib/WWW/HKP.pm',
     LICENSE             => 'ISC',
     PL_FILES            => {},
+    PMLIBDIRS           => [qw[ lib ]],
     PREREQ_PM => {
         'Test::More' => 0,
         'LWP::UserAgent' => 6.05,
@@ -19,6 +20,6 @@
     },
     clean               => { FILES => 'WWW-HKP-* *~' },
     depend => {
-	'$(FIRST_MAKEFILE)' => 'BuildOptions.pm',
+	'$(FIRST_MAKEFILE)' => 'config/BuildOptions.pm',
     },
 );
