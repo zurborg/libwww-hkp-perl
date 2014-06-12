@@ -11,3 +11,7 @@ cover_db
 *~
 *.bak
 MYMETA.*
+INSTALL
+MANIFEST.SKIP
+README
+README.pod
