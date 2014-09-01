@@ -4,6 +4,7 @@ config/BuildOptions.pm
 Makefile.PL
 MANIFEST
 README
+README.md
 INSTALL
 t/00-load.t
 t/01-parse.t
