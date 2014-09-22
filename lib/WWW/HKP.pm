@@ -43,14 +43,14 @@ More Informationen about HKP is available at L<http://tools.ietf.org/html/draft-
 
 The C<new()> constructor method instanciates a new C<WWW::HKP> object. The following example shows available options and its default values.
 
-    my $hkp = WWW::HKP->new(
-	host => 'localhost',
-	port => 11371
-    );
+	my $hkp = WWW::HKP->new(
+		host => 'localhost',
+		port => 11371
+	);
 
 In most cases you just need to set the I<host> parameter:
 
-    my $hkp = new WWW::HKP host => 'pool.sks-keyservers.net';
+	my $hkp = new WWW::HKP host => 'pool.sks-keyservers.net';
 
 =cut
 
@@ -65,8 +65,8 @@ sub new($;%) {
     $ua->agent(__PACKAGE__.'/'.$VERSION);
     
     my $self = {
-	ua => $ua,
-	uri => $uri,
+		ua => $ua,
+		uri => $uri,
     };
     
     return bless $self => (ref $class || $class);
@@ -82,10 +82,10 @@ sub _get($$) {
     $self->_uri->query_form(%query);
     my $response = $self->_ua->get($self->_uri);
     if (defined $response and ref $response and $response->isa('HTTP::Response') and $response->is_success) {
-	return $response->decoded_content;
+		return $response->decoded_content;
     } else {
-	$self->{error} = $response->status_line;
-	return undef;
+		$self->{error} = $response->status_line;
+		return undef;
     }
 }
 
@@ -95,10 +95,10 @@ sub _post($%) {
     $self->_uri->path('/pks/lookup');
     my $response = $self->_ua->post($self->_uri, \%query);
     if (defined $response and ref $response and $response->isa('HTTP::Response') and $response->is_success) {
-	return $response->decoded_content;
+		return $response->decoded_content;
     } else {
-	$self->{error} = $response->status_line;
-	return undef;
+		$self->{error} = $response->status_line;
+		return undef;
     }
 
 }
@@ -109,46 +109,46 @@ sub _parse_mr($$$) {
     my $key;
     my ($keyc, $keyn) = (0, 0);
     foreach my $line (split /\r?\n/ => $lines) {
-	if ($line =~ /^info:(\d+):(\d+)$/) {
-	    croak "unsupported hkp version: v$1" unless $1 == 1;
-	    $keyc = $2;
-	} elsif ($line =~ /^pub:([0-9a-f]{8,16}):(\d*):(\d*):(\d*):(\d*):([der]*)$/i) {
-	    $key = $1;
-	    $keyn++;
-	    my ($algo, $keylen, $created, $expires, $flags, $ok) = ($2, $3, $4, $5, $6, undef);
-	    $ok = ((($created and $created > time) or ($expires and $expires < time) or (length $flags)) ? 0 : 1);
-	    if ($filter_ok and !$ok) {
-		$key = undef;
-		next;
-	    }
-	    $keys->{$key} = {
-		algo => $algo,
-		keylen => $keylen,
-		created => $created || undef,
-		expires => $expires || undef,
-		revoked => ($flags =~ /r/ ? 1 : 0),
-		expired => ($flags =~ /e/ ? 1 : 0),
-		deleted => ($flags =~ /d/ ? 1 : 0),
-		ok => $ok,
-		uids => []
-	    };
-	} elsif ($line =~ /^uid:([^:]*):(\d*):(\d*):([der]*)$/i) {
-	    next unless defined $key;
-	    my ($uid, $created, $expires, $flags, $ok) = ($1, $2, $3, $4, undef);
-	    $ok = ((($created and $created > time) or ($expires and $expires < time) or (length $flags)) ? 0 : 1);
-	    next if $filter_ok and !$ok;
-	    push @{ $keys->{$key}->{uids} } => {
-		uid => uri_unescape($uid),
-		created => $created || undef,
-		expires => $expires || undef,
-		revoked => ($flags =~ /r/ ? 1 : 0),
-		expired => ($flags =~ /e/ ? 1 : 0),
-		deleted => ($flags =~ /d/ ? 1 : 0),
-		ok => $ok
-	    };
-	} else {
-	    carp "unknown line: $line";
-	}
+		if ($line =~ /^info:(\d+):(\d+)$/) {
+			croak "unsupported hkp version: v$1" unless $1 == 1;
+			$keyc = $2;
+		} elsif ($line =~ /^pub:([0-9a-f]{8,16}):(\d*):(\d*):(\d*):(\d*):([der]*)$/i) {
+			$key = $1;
+			$keyn++;
+			my ($algo, $keylen, $created, $expires, $flags, $ok) = ($2, $3, $4, $5, $6, undef);
+			$ok = ((($created and $created > time) or ($expires and $expires < time) or (length $flags)) ? 0 : 1);
+			if ($filter_ok and !$ok) {
+				$key = undef;
+				next;
+			}
+			$keys->{$key} = {
+				algo => $algo,
+				keylen => $keylen,
+				created => $created || undef,
+				expires => $expires || undef,
+				revoked => ($flags =~ /r/ ? 1 : 0),
+				expired => ($flags =~ /e/ ? 1 : 0),
+				deleted => ($flags =~ /d/ ? 1 : 0),
+				ok => $ok,
+				uids => []
+			};
+		} elsif ($line =~ /^uid:([^:]*):(\d*):(\d*):([der]*)$/i) {
+			next unless defined $key;
+			my ($uid, $created, $expires, $flags, $ok) = ($1, $2, $3, $4, undef);
+			$ok = ((($created and $created > time) or ($expires and $expires < time) or (length $flags)) ? 0 : 1);
+			next if $filter_ok and !$ok;
+			push @{ $keys->{$key}->{uids} } => {
+				uid => uri_unescape($uid),
+				created => $created || undef,
+				expires => $expires || undef,
+				revoked => ($flags =~ /r/ ? 1 : 0),
+				expired => ($flags =~ /e/ ? 1 : 0),
+				deleted => ($flags =~ /d/ ? 1 : 0),
+				ok => $ok
+			};
+		} else {
+			carp "unknown line: $line";
+		}
     }
     carp "server said there where $keyc keys, but $keyn keys parsed" unless $keyc == $keyn;
     return $keys;
@@ -175,27 +175,27 @@ If any keys where found, a hashref is returned. Otherwise returns undef, an erro
 The returned hashref may look like this:
 
     {
-	'DEADBEEF' => {
-	    'algo' => '1',
-	    'keylen' => '2048',
-	    'created' => '1253025510',
-	    'expires' => '1399901151',
-	    'deleted' => 0,
-	    'expired' => 0,
-	    'revoked' => 0,
-	    'ok' => 1,
-	    'uids' => [
-		{
-		    'uid' => 'Lorem Ipsum (This is an example) <foo@bar.baz>'
-		    'created' => '1253025510',
-		    'expires' => '1399901151',
-		    'deleted' => 0,
-		    'expired' => 0,
-		    'revoked' => 0,
-		    'ok' => 1
+		'DEADBEEF' => {
+			'algo' => '1',
+			'keylen' => '2048',
+			'created' => '1253025510',
+			'expires' => '1399901151',
+			'deleted' => 0,
+			'expired' => 0,
+			'revoked' => 0,
+			'ok' => 1,
+			'uids' => [
+				{
+					'uid' => 'Lorem Ipsum (This is an example) <foo@bar.baz>'
+					'created' => '1253025510',
+					'expires' => '1399901151',
+					'deleted' => 0,
+					'expired' => 0,
+					'revoked' => 0,
+					'ok' => 1
+				}
+			]
 		}
-	    ]
-	}
     }
 
 The keys of the hashref are key-ids. The meaning of the hashkeys in the seconded level:
@@ -262,13 +262,13 @@ Set the I<filter_ok> parameter to C<1> (or any expression that evaluates to true
 
 =cut
 
-	when ('index') {
-	    my @options = qw(mr);
-	    push @options => 'exact' if $options{exact};
-	    my $message = $self->_get(op => 'index', options => join(',' => @options), search => $search);
-	    return undef unless defined $message;
-	    return $self->_parse_mr($message, $options{filter_ok} ? 1 : 0);
-	}
+		when ('index') {
+			my @options = qw(mr);
+			push @options => 'exact' if $options{exact};
+			my $message = $self->_get(op => 'index', options => join(',' => @options), search => $search);
+			return undef unless defined $message;
+			return $self->_parse_mr($message, $options{filter_ok} ? 1 : 0);
+		}
 
 =head3 I<get> operation
 
@@ -278,14 +278,14 @@ The operation returns the public key of specified key-id or undef, if not found.
 
 =cut
 
-	when ('get') {
-	    if ($search !~ /^0x/) {
-		$search = '0x'.$search;
-	    }
-	    my $message = $self->_get(op => 'get', options => 'exact', search => $search);
-	    return undef unless defined $message;
-	    return $message;
-	}
+		when ('get') {
+			if ($search !~ /^0x/) {
+				$search = '0x'.$search;
+			}
+			my $message = $self->_get(op => 'get', options => 'exact', search => $search);
+			return undef unless defined $message;
+			return $message;
+		}
 
 =head3 unimplemented operations
 
@@ -293,9 +293,9 @@ A HKP server may implement various other operations. Unimplemented operation cau
 
 =cut
 
-	default {
-	    confess "unknown query type '$type'";
-	}
+		default {
+			confess "unknown query type '$type'";
+		}
     }
 }
 
@@ -308,7 +308,7 @@ Submit one or more ASCII-armored version of public keys to the server.
     $hkp->submit($pubkey);
     
     @pubkeys = ($pubkey1, $pubkey2, ...);
-
+    
     $hkp->submit(@pubkeys);
 
 In case of success, C<1> is returned. Otherweise C<0> and an error message can be fetched from C<$hkp->error>.
