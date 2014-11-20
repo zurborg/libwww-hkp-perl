@@ -51,7 +51,7 @@ The C<new()> constructor method instantiates a new C<WWW::HKP> object. The follo
 
 In most cases you just need to set the I<host> parameter:
 
-	my $hkp = WWW::HKP->(host => 'pool.sks-keyservers.net');
+	my $hkp = WWW::HKP->new(host => 'pool.sks-keyservers.net');
 
 =cut
 
