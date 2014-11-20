@@ -9,6 +9,7 @@ perl:
 before_script:
   - cpanm Pod::Readme
   - cpanm Pod::Markdown
+  - cpanm Hash::Merge::Simple
   
 script: "perl Makefile-Development.PL && make all && make disttest"
 
