@@ -22,4 +22,12 @@
     depend => {
 	'$(FIRST_MAKEFILE)' => 'config/BuildOptions.pm',
     },
+    META_MERGE => {
+        resources => {
+            repository => 'https://github.com/zurborg/libwww-hkp-perl',
+            homepage   => 'http://development.david-zurb.org/projects/libwww-hkp-perl',
+            bugtracker => 'http://development.david-zurb.org/projects/libwww-hkp-perl/issues',
+        },
+        no_index => {directory => [qw/t/]},
+    },
 );
