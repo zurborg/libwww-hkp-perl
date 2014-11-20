@@ -5,6 +5,7 @@ use strict;
 use Carp;
 use 5.010;
 
+use experimental qw( switch );
 use LWP::UserAgent 6.05;
 use URI 1.60;
 use URI::Escape 3.31;

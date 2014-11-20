@@ -7,6 +7,7 @@
     PL_FILES            => {},
     PMLIBDIRS           => [qw[ lib ]],
     PREREQ_PM => {
+        'experimental' => 0,
         'Test::More' => 0,
         'LWP::UserAgent' => 6.05,
         'URI' => 1.60,
@@ -20,7 +21,7 @@
     },
     clean               => { FILES => 'WWW-HKP-* *~' },
     depend => {
-	'$(FIRST_MAKEFILE)' => 'config/BuildOptions.pm',
+        '$(FIRST_MAKEFILE)' => 'config/BuildOptions.pm',
     },
     META_MERGE => {
         resources => {
