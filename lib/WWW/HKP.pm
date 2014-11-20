@@ -5,6 +5,7 @@ use strict;
 use Carp;
 use 5.010;
 
+use experimental qw( switch );
 use LWP::UserAgent 6.05;
 use URI 1.60;
 use URI::Escape 3.31;
@@ -35,13 +36,13 @@ our $VERSION = '0.02';
 
 This module implements the IETF draft of the OpenPGP HTTP Keyserver Protocol.
 
-More Informationen about HKP is available at L<http://tools.ietf.org/html/draft-shaw-openpgp-hkp-00>.
+More information about HKP is available at L<http://tools.ietf.org/html/draft-shaw-openpgp-hkp-00>.
 
 =head1 FUNCTIONS
 
 =head2 new([%options])
 
-The C<new()> constructor method instanciates a new C<WWW::HKP> object. The following example shows available options and its default values.
+The C<new()> constructor method instantiates a new C<WWW::HKP> object. The following example shows available options and its default values.
 
 	my $hkp = WWW::HKP->new(
 		host => 'localhost',
@@ -50,7 +51,7 @@ The C<new()> constructor method instanciates a new C<WWW::HKP> object. The follo
 
 In most cases you just need to set the I<host> parameter:
 
-	my $hkp = new WWW::HKP host => 'pool.sks-keyservers.net';
+	my $hkp = WWW::HKP->(host => 'pool.sks-keyservers.net');
 
 =cut
 
@@ -170,7 +171,7 @@ sub query($$$;%) {
 
 The first parameter must be I<index>, the secondend parameter an email-address or key-id.
 
-If any keys where found, a hashref is returned. Otherwise returns undef, an error message can be fetched with C<< $hkp->error() >>.
+If any keys where found, a hashref is returned. Otherwise C<undef> is returned, an error message can be fetched with C<< $hkp->error() >>.
 
 The returned hashref may look like this:
 
@@ -198,17 +199,17 @@ The returned hashref may look like this:
 		}
     }
 
-The keys of the hashref are key-ids. The meaning of the hashkeys in the seconded level:
+The keys of the hashref are key-ids. The meaning of the hash keys in the second level:
 
 =over
 
 =item I<algo>
 
-The algorithm of the key. The values are described in RFC 2440
+The algorithm of the key. The values are described in RFC 2440.
 
 =item I<keylen>
 
-The key length in bytes
+The key length in bytes.
 
 =item I<created>
 
@@ -216,7 +217,7 @@ Creation date of the key, in seconds since 1970-01-01 UTC.
 
 =item I<expires>
 
-Expiration date of the key
+Expiration date of the key.
 
 =item I<deleted>, I<expired>, I<revoked>
 
@@ -224,7 +225,7 @@ Indication details, whether the key is deleted, expired or revoked. If the flag 
 
 =item I<ok>
 
-The creation date and expiration date is checked against C<time()>. If it doesn't match or any of the flags obove are set, I<ok> will be C<0>, otherwise C<1>.
+The creation date and expiration date is checked against C<time()>. If it doesn't match or any of the flags above are set, I<ok> will be C<0>, otherwise C<1>.
 
 =item I<uids>
 
@@ -311,7 +312,7 @@ Submit one or more ASCII-armored version of public keys to the server.
     
     $hkp->submit(@pubkeys);
 
-In case of success, C<1> is returned. Otherweise C<0> and an error message can be fetched from C<$hkp->error>.
+In case of success, C<1> is returned. Otherweise C<0> and an error message can be fetched from C<< $hkp->error() >>.
 
 =cut
 
