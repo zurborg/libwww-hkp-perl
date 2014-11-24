@@ -1,6 +1,7 @@
 Revision history for WWW-HKP
 
 {{$NEXT}}
+
  - Revert "changed distname to project name (debian-like)"
  - changed license to ISC
  - no Changes file yet
