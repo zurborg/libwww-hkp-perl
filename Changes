@@ -1,6 +1,7 @@
 Revision history for WWW-HKP
 
 {{$NEXT}}
+ - auto-update changelog before release
 
 0.03 2014-11-24
  - Revert "changed distname to project name (debian-like)"
