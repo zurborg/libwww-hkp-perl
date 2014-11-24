@@ -1,27 +1,15 @@
-package WWW::HKP;
-
-use warnings;
 use strict;
+use warnings;
+package WWW::HKP;
+# ABSTRACT: Interface to HTTP Keyserver Protocol (HKP)
+
 use Carp;
 use 5.010;
-
-use experimental qw( switch );
 use LWP::UserAgent 6.05;
 use URI 1.60;
 use URI::Escape 3.31;
 
-=head1 NAME
-
-WWW::HKP - Interface to HTTP Keyserver Protocol (HKP)
-
-=head1 VERSION
-
-Version 0.02
-
-=cut
-
-our $VERSION = '0.02';
-
+# VERSION
 
 =head1 SYNOPSIS
 
@@ -38,9 +26,7 @@ This module implements the IETF draft of the OpenPGP HTTP Keyserver Protocol.
 
 More information about HKP is available at L<http://tools.ietf.org/html/draft-shaw-openpgp-hkp-00>.
 
-=head1 FUNCTIONS
-
-=head2 new([%options])
+=method new([%options])
 
 The C<new()> constructor method instantiates a new C<WWW::HKP> object. The following example shows available options and its default values.
 
@@ -155,7 +141,7 @@ sub _parse_mr($$$) {
     return $keys;
 }
 
-=head2 query($type => $search [, %options ])
+=method query($type => $search [, %options ])
 
 The C<query()> method implements both query operations of HKP: I<index> and I<get>
 
@@ -163,7 +149,6 @@ The C<query()> method implements both query operations of HKP: I<index> and I<ge
 
 sub query($$$;%) {
     my ($self, $type, $search, %options) = @_;
-    given ($type) {
 
 =head3 I<index> operation
 
@@ -263,7 +248,7 @@ Set the I<filter_ok> parameter to C<1> (or any expression that evaluates to true
 
 =cut
 
-		when ('index') {
+		if ($type eq 'index') {
 			my @options = qw(mr);
 			push @options => 'exact' if $options{exact};
 			my $message = $self->_get(op => 'index', options => join(',' => @options), search => $search);
@@ -279,7 +264,7 @@ The operation returns the public key of specified key-id or undef, if not found.
 
 =cut
 
-		when ('get') {
+		elsif ($type eq 'get') {
 			if ($search !~ /^0x/) {
 				$search = '0x'.$search;
 			}
@@ -294,13 +279,12 @@ A HKP server may implement various other operations. Unimplemented operation cau
 
 =cut
 
-		default {
+		else {
 			confess "unknown query type '$type'";
 		}
-    }
 }
 
-=head2 submit
+=method submit
 
 Submit one or more ASCII-armored version of public keys to the server.
 
@@ -322,7 +306,7 @@ sub submit($@) {
     return (defined $status and $status ? 1 : 0);
 }
 
-=head2 error
+=method error
 
 Returns last error message, if any.
 
@@ -332,53 +316,4 @@ Returns last error message, if any.
 
 sub error($) { shift->{error} }
 
-=head1 AUTHOR
-
-David Zurborg, C<< <zurborg at cpan.org> >>
-
-=head1 BUGS
-
-Please report any bugs or feature requests trough my project management tool at L<http://development.david-zurb.org/projects/libwww-hkp-perl/issues/new>. I will be notified, and then you'll
-automatically be notified of progress on your bug as I make changes.
-
-=head1 SUPPORT
-
-You can find documentation for this module with the perldoc command.
-
-    perldoc WWW::HKP
-
-You can also look for information at:
-
-=over 4
-
-=item * Redmine: Homepage of this module
-
-L<http://development.david-zurb.org/projects/libwww-hkp-perl>
-
-=item * RT: CPAN's request tracker
-
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=WWW-HKP>
-
-=item * AnnoCPAN: Annotated CPAN documentation
-
-L<http://annocpan.org/dist/WWW-HKP>
-
-=item * CPAN Ratings
-
-L<http://cpanratings.perl.org/d/WWW-HKP>
-
-=item * Search CPAN
-
-L<http://search.cpan.org/dist/WWW-HKP/>
-
-=back
-
-=head1 COPYRIGHT & LICENSE
-
-Copyright 2014 David Zurborg, all rights reserved.
-
-This program is free software; you can redistribute it and/or modify it under the terms of the ISC license.
-
-=cut
-
-1; # End of WWW::HKP
+1;
