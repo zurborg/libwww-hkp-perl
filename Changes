@@ -2,6 +2,7 @@ Revision history for WWW-HKP
 
 {{$NEXT}}
 
+0.03 2014-11-24
  - Revert "changed distname to project name (debian-like)"
  - changed license to ISC
  - no Changes file yet
@@ -22,7 +23,9 @@ Revision history for WWW-HKP
  - brush up Pod
  - reduce warnings on recent perls
  - add Hash::Merge::Simple for travis CI to (hopefully) build
- - Merge branch 'dist-enhancements' of github.com:sergeyromanov/libwww-hkp-perl into sergeyromanov-dist-enhancements
+ - Merge branch 'dist-enhancements' of
+   github.com:sergeyromanov/libwww-hkp-perl into
+   sergeyromanov-dist-enhancements
  - fix typo
 
 0.02 2014-04-02
