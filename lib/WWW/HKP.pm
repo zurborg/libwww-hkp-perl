@@ -41,7 +41,7 @@ In most cases you just need to set the I<host> parameter:
 
 =cut
 
-sub new($;%) {
+sub new {
     my ($class, %options) = @_;
     
     my $uri = URI->new('http:');
@@ -59,10 +59,10 @@ sub new($;%) {
     return bless $self => (ref $class || $class);
 }
 
-sub _ua($) { shift->{ua} }
-sub _uri($) { shift->{uri} }
+sub _ua { shift->{ua} }
+sub _uri { shift->{uri} }
 
-sub _get($$) {
+sub _get {
     my ($self, %query) = @_;
     $self->{error} = undef;
     $self->_uri->path('/pks/lookup');
@@ -76,7 +76,7 @@ sub _get($$) {
     }
 }
 
-sub _post($%) {
+sub _post {
     my ($self, %query) = @_;
     $self->{error} = undef;
     $self->_uri->path('/pks/lookup');
@@ -90,7 +90,7 @@ sub _post($%) {
 
 }
 
-sub _parse_mr($$$) {
+sub _parse_mr {
     my ($self, $lines, $filter_ok) = @_;
     my $keys = {};
     my $key;
@@ -147,7 +147,7 @@ The C<query()> method implements both query operations of HKP: I<index> and I<ge
 
 =cut
 
-sub query($$$;%) {
+sub query {
     my ($self, $type, $search, %options) = @_;
 
 =head3 I<index> operation
@@ -300,7 +300,7 @@ In case of success, C<1> is returned. Otherweise C<0> and an error message can b
 
 =cut
 
-sub submit($@) {
+sub submit {
     my ($self, @keys) = @_;
     my $status = $self->_post(map {( keytext => $_ )} @keys);
     return (defined $status and $status ? 1 : 0);
@@ -314,6 +314,6 @@ Returns last error message, if any.
 
 =cut
 
-sub error($) { shift->{error} }
+sub error { shift->{error} }
 
 1;
