@@ -3,9 +3,8 @@ use warnings;
 package WWW::HKP;
 # ABSTRACT: Interface to HTTP Keyserver Protocol (HKP)
 
+use AnyEvent::HTTP qw(http_get http_post);
 use Carp;
-use 5.010;
-use LWP::UserAgent 6.05;
 use URI 1.60;
 use URI::Escape 3.31;
 
@@ -43,19 +42,22 @@ In most cases you just need to set the I<host> parameter:
 
 sub new {
     my ($class, %options) = @_;
-    
+
     my $uri = URI->new('http:');
     $uri->host($options{host} || 'localhost');
     $uri->port($options{port} || 11371);
-    
-    my $ua = LWP::UserAgent->new;
-    $ua->agent(__PACKAGE__.'/'.$VERSION);
-    
+
+	my $ua = $AnyEvent::HTTP::USERAGENT;
+	{
+		local $_ = __PACKAGE__.'/'.$VERSION;
+		$ua =~ s{\)$}{ +$_)};
+	}
+
     my $self = {
 		ua => $ua,
 		uri => $uri,
     };
-    
+
     return bless $self => (ref $class || $class);
 }
 
@@ -64,21 +66,28 @@ sub _uri { shift->{uri} }
 
 sub _get {
     my ($self, %query) = @_;
+
     $self->{error} = undef;
     $self->_uri->path('/pks/lookup');
     $self->_uri->query_form(%query);
-    my $response = $self->_ua->get($self->_uri);
-    if (defined $response and ref $response and $response->isa('HTTP::Response') and $response->is_success) {
-		return $response->decoded_content;
-    } else {
-		$self->{error} = $response->status_line;
-		return;
-    }
+
+	my $cv = AE::cv;
+	http_get $self->_uri, sub {
+		my ($body, $hdr) = @_;
+		if ($hdr->{Status} ne '200') {
+			$self->{error} = sprintf 'HTTP %d: %s', $hdr->{Status}, $hdr->{Reason};
+			$cv->send;
+		} else {
+			$cv->send($body);
+		}
+	};
+	$cv->recv;
 }
 
 sub _post {
     my ($self, %query) = @_;
-    $self->{error} = undef;
+
+	$self->{error} = undef;
     $self->_uri->path('/pks/lookup');
     my $response = $self->_ua->post($self->_uri, \%query);
     if (defined $response and ref $response and $response->isa('HTTP::Response') and $response->is_success) {
@@ -88,6 +97,17 @@ sub _post {
 		return;
     }
 
+	my $cv = AE::cv;
+	http_post $self->_uri, \%query, (), sub {
+		my ($body, $hdr) = @_;
+		if ($hdr->{Status} ne '200') {
+			$self->{error} = sprintf 'HTTP %d: %s', $hdr->{Status}, $hdr->{Reason};
+			$cv->send;
+		} else {
+			$cv->send($body);
+		}
+	};
+	$cv->recv;
 }
 
 sub _parse_mr {
