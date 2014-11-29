@@ -1,6 +1,10 @@
 Revision history for WWW-HKP
 
 {{$NEXT}}
+ - various fixes for passing Perl::Critic tests
+
+0.040 2014-11-29
+ - change version format
 
 0.04 2014-11-24
  - auto-update changelog before release
