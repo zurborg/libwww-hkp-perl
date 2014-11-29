@@ -41,7 +41,7 @@ In most cases you just need to set the I<host> parameter:
 
 =cut
 
-sub new($;%) {
+sub new {
     my ($class, %options) = @_;
     
     my $uri = URI->new('http:');
@@ -59,10 +59,10 @@ sub new($;%) {
     return bless $self => (ref $class || $class);
 }
 
-sub _ua($) { shift->{ua} }
-sub _uri($) { shift->{uri} }
+sub _ua { shift->{ua} }
+sub _uri { shift->{uri} }
 
-sub _get($$) {
+sub _get {
     my ($self, %query) = @_;
     $self->{error} = undef;
     $self->_uri->path('/pks/lookup');
@@ -72,11 +72,11 @@ sub _get($$) {
 		return $response->decoded_content;
     } else {
 		$self->{error} = $response->status_line;
-		return undef;
+		return;
     }
 }
 
-sub _post($%) {
+sub _post {
     my ($self, %query) = @_;
     $self->{error} = undef;
     $self->_uri->path('/pks/lookup');
@@ -85,12 +85,12 @@ sub _post($%) {
 		return $response->decoded_content;
     } else {
 		$self->{error} = $response->status_line;
-		return undef;
+		return;
     }
 
 }
 
-sub _parse_mr($$$) {
+sub _parse_mr {
     my ($self, $lines, $filter_ok) = @_;
     my $keys = {};
     my $key;
@@ -147,7 +147,7 @@ The C<query()> method implements both query operations of HKP: I<index> and I<ge
 
 =cut
 
-sub query($$$;%) {
+sub query {
     my ($self, $type, $search, %options) = @_;
 
 =head3 I<index> operation
@@ -252,7 +252,7 @@ Set the I<filter_ok> parameter to C<1> (or any expression that evaluates to true
 			my @options = qw(mr);
 			push @options => 'exact' if $options{exact};
 			my $message = $self->_get(op => 'index', options => join(',' => @options), search => $search);
-			return undef unless defined $message;
+			return unless defined $message;
 			return $self->_parse_mr($message, $options{filter_ok} ? 1 : 0);
 		}
 
@@ -269,7 +269,7 @@ The operation returns the public key of specified key-id or undef, if not found.
 				$search = '0x'.$search;
 			}
 			my $message = $self->_get(op => 'get', options => 'exact', search => $search);
-			return undef unless defined $message;
+			return unless defined $message;
 			return $message;
 		}
 
@@ -300,7 +300,7 @@ In case of success, C<1> is returned. Otherweise C<0> and an error message can b
 
 =cut
 
-sub submit($@) {
+sub submit {
     my ($self, @keys) = @_;
     my $status = $self->_post(map {( keytext => $_ )} @keys);
     return (defined $status and $status ? 1 : 0);
@@ -314,6 +314,6 @@ Returns last error message, if any.
 
 =cut
 
-sub error($) { shift->{error} }
+sub error { shift->{error} }
 
 1;

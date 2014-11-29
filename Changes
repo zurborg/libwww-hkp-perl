@@ -1,6 +1,11 @@
 Revision history for WWW-HKP
 
 {{$NEXT}}
+ - use Dist::Zilla::PluginBundle::ZURBORG
+ - various fixes for passing Perl::Critic tests
+
+0.040 2014-11-29
+ - change version format
 
 0.04 2014-11-24
  - auto-update changelog before release
