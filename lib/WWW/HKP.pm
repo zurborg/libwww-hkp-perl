@@ -72,7 +72,7 @@ sub _get {
 		return $response->decoded_content;
     } else {
 		$self->{error} = $response->status_line;
-		return undef;
+		return;
     }
 }
 
@@ -85,7 +85,7 @@ sub _post {
 		return $response->decoded_content;
     } else {
 		$self->{error} = $response->status_line;
-		return undef;
+		return;
     }
 
 }
@@ -252,7 +252,7 @@ Set the I<filter_ok> parameter to C<1> (or any expression that evaluates to true
 			my @options = qw(mr);
 			push @options => 'exact' if $options{exact};
 			my $message = $self->_get(op => 'index', options => join(',' => @options), search => $search);
-			return undef unless defined $message;
+			return unless defined $message;
 			return $self->_parse_mr($message, $options{filter_ok} ? 1 : 0);
 		}
 
@@ -269,7 +269,7 @@ The operation returns the public key of specified key-id or undef, if not found.
 				$search = '0x'.$search;
 			}
 			my $message = $self->_get(op => 'get', options => 'exact', search => $search);
-			return undef unless defined $message;
+			return unless defined $message;
 			return $message;
 		}
 
