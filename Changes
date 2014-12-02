@@ -3,6 +3,7 @@ Revision history for WWW-HKP
 {{$NEXT}}
  - use Dist::Zilla::PluginBundle::ZURBORG
  - various fixes for passing Perl::Critic tests
+ - tidy up code
 
 0.040 2014-11-29
  - change version format
