@@ -4,6 +4,12 @@ Revision history for WWW-HKP
  - use Dist::Zilla::PluginBundle::ZURBORG
  - various fixes for passing Perl::Critic tests
  - tidy up code
+ - use AnyEvent::Proc
+ - allow ssl connection
+ - allow fingerprints as keyid
+ - fix index operation
+ - new method: import_keys()
+ - extend method submit()
 
 0.040 2014-11-29
  - change version format
