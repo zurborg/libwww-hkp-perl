@@ -392,6 +392,27 @@ A HKP server may implement various other operations. Unimplemented operation cau
     }
 }
 
+=method import_keys($gnupg, @search)
+
+This methods imports keys to an L<AnyEvent::GnuPG> object. C<@search> is a list of email addresses to search for. The method imports all found and valid public keys to the keyring.
+
+=cut
+
+sub import_keys {
+    my ( $self, $gnupg, @subjects ) = @_;
+    confess "" unless ref $gnupg eq 'AnyEvent::GnuPG';
+    map    { $gnupg->import_key($_) }
+      grep { defined }
+      map  { $self->query( get => $_ ) } map { keys %$_ } grep { defined } map {
+        scalar $self->query(
+            index       => $_,
+            exact       => 1,
+            filter_ok   => 1,
+            fingerprint => 1
+          )
+      } @subjects;
+}
+
 =method submit
 
 Submit one or more ASCII-armored version of public keys to the server.
@@ -406,12 +427,31 @@ Submit one or more ASCII-armored version of public keys to the server.
 
 In case of success, C<1> is returned. Otherweise C<0> and an error message can be fetched from C<< $hkp->error() >>.
 
+When the first parameter is an L<AnyEvent::GnuPG> object, then public keys from the keyring will be submitted to the keyserver. Further arguments restrict the public keys to be exported.
+
+	# export and sumbit all public keys in the keyring
+	$hkp->submit($gnupg);
+	
+	# export and submit only a subset
+	$hkp->submit($gnupg, qw( foo@bar.net baz@baf.org ))
+
 =cut
 
 sub submit {
     my ( $self, @keys ) = @_;
-    my $status = $self->_post( map { ( keytext => $_ ) } @keys );
-    return ( defined $status and $status ? 1 : 0 );
+    return unless @keys;
+    if ( ref $keys[0] eq 'AnyEvent::GnuPG' ) {
+        my $gnupg = shift @keys;
+        my $output;
+        $gnupg->export_keys(
+            armor => 1,
+            ( @keys ? ( keys => \@keys ) : () ), output => \$output
+        );
+        return !!$self->_post( keytext => $output );
+    }
+    else {
+        return !!$self->_post( map { ( keytext => $_ ) } @keys );
+    }
 }
 
 =method error
