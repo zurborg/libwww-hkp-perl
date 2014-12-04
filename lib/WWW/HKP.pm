@@ -35,7 +35,7 @@ The C<new()> constructor method instantiates a new C<WWW::HKP> object. The follo
 	my $hkp = WWW::HKP->new(
 		host => 'localhost',
 		port => 11371,
-		secure => 1, # use HTTPS
+		secure => 0, # if 1, use https on port 443
 	);
 
 In most cases you just need to set the I<host> parameter:
@@ -47,11 +47,9 @@ In most cases you just need to set the I<host> parameter:
 sub new {
     my ( $class, %options ) = @_;
 
-    $options{secure} ||= 1;
-
     my $uri = URI->new( $options{secure} ? 'https:' : 'http:' );
     $uri->host( $options{host} || 'localhost' );
-    $uri->port( $options{port} || 11371 );
+    $uri->port( $options{port} || ( $options{secure} ? 443 : 11371 ) );
 
     my $ua = $AnyEvent::HTTP::USERAGENT;
     {
