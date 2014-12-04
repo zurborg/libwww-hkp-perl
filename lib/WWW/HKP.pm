@@ -187,6 +187,23 @@ sub _parse_mr {
     return $keys;
 }
 
+sub _filter_result {
+    my ( $self, $result, $grep ) = @_;
+    return unless $result;
+    my $filtered = {};
+    foreach my $keyid ( keys %$result ) {
+        my @uids =
+          map  { $_->[0] }
+          grep { $grep->( $_->[1] ) }
+          grep { defined $_->[1] }
+          map  { [ $_, Email::Address->parse( $_->{uid} ) ] }
+          @{ $result->{$keyid}->{uids} };
+        next unless @uids;
+        $filtered->{$keyid} = { %{ $result->{$keyid} }, uids => \@uids };
+    }
+    return $filtered;
+}
+
 =method query($type => $search [, %options ])
 
 The C<query()> method implements both query operations of HKP: I<index> and I<get>
@@ -202,7 +219,7 @@ sub query {
 
 The first parameter must be I<index>, the secondend parameter an email-address or key-id.
 
-If any keys where found, a hashref is returned. Otherwise C<undef> is returned, an error message can be fetched with C<< $hkp->error() >>.
+In scalar context, if any keys were found, a hashref is returned. Otherwise C<undef> is returned, an error message can be fetched with C<< $hkp->error() >>.
 
 The returned hashref may look like this:
 
@@ -276,13 +293,15 @@ This fields have the same meaning as described above. The information is taken f
 
 =back
 
+In list context, only the found key-ids are returned or an empty list if none.
+
 =head4 Available options
 
 =over
 
 =item I<exact>
 
-Set the I<filter_ok> parameter to C<1> (or any expression that evaluates to true), if you want an exact match of your search expression.
+Set the I<exact> parameter to C<1> (or any expression that evaluates to true), if you want an exact match of your search expression.
 
 =item I<filter_ok>
 
@@ -290,20 +309,37 @@ Set the I<filter_ok> parameter to C<1> (or any expression that evaluates to true
 
     $hkp->query(index => 'foo@bar.baz', filter_ok => 1);
 
+=item I<fingerprint>
+
+Provide the pull fingerprint in key-id instead of the abbreviated form. Note that not every server supports this keyword.
+
 =back
 
 =cut
 
     if ( $type eq 'index' ) {
-        my @options = qw(mr);
-        push @options => 'exact' if $options{exact};
         my $message = $self->_get(
-            op      => 'index',
-            options => join( ',' => @options ),
-            search  => $search
+            op          => 'index',
+            options     => 'mr',
+            search      => $search,
+            exact       => ( $options{exact} ? 'on' : 'off' ),
+            fingerprint => ( $options{fingerprint} ? 'on' : 'off' ),
         );
-        return unless defined $message;
-        return $self->_parse_mr( $message, $options{filter_ok} ? 1 : 0 );
+        unless ( defined $message ) {
+            return () if wantarray;
+            return;
+        }
+        my $result = $self->_parse_mr( $message, $options{filter_ok} ? 1 : 0 );
+        if ( $options{exact} ) {
+            $result = $self->_filter_result( $result,
+                sub { shift->address eq $search } );
+        }
+        if (wantarray) {
+            return keys %$result;
+        }
+        else {
+            return $result;
+        }
     }
 
 =head3 I<get> operation
