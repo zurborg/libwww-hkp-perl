@@ -5,6 +5,7 @@ package WWW::HKP;
 
 # ABSTRACT: Interface to HTTP Keyserver Protocol (HKP)
 
+use AnyEvent;
 use AnyEvent::HTTP qw(http_get http_post);
 use Carp;
 use URI 1.60;
@@ -55,6 +56,9 @@ sub new {
         $ua =~ s{\)$}{ +$_)};
     }
 
+    AE::log debug => "User-Agent: $ua";
+    AE::log debug => "Host: $uri";
+
     my $self = {
         ua  => $ua,
         uri => $uri,
@@ -73,14 +77,18 @@ sub _get {
     $self->_uri->query_form(%query);
 
     my $cv = AE::cv;
+    AE::log debug => "GET " . $self->_uri;
     http_get $self->_uri, sub {
         my ( $body, $hdr ) = @_;
         if ( $hdr->{Status} ne '200' ) {
             $self->{error} = sprintf 'HTTP %d: %s', $hdr->{Status},
               $hdr->{Reason};
+            AE::log error => $self->{error};
             $cv->send;
         }
         else {
+            use bytes;
+            AE::log debug => "got " . ( length $body ) . " bytes";
             $cv->send($body);
         }
     };
