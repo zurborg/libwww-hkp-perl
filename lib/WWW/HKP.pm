@@ -10,6 +10,8 @@ use AnyEvent::HTTP qw(http_request);
 use Carp;
 use URI 1.60;
 use URI::Escape 3.31;
+use List::MoreUtils qw(natatime);
+use URL::Encode qw(url_encode);
 
 # VERSION
 
@@ -97,23 +99,41 @@ sub _get {
     $cv->recv;
 }
 
+sub _x_www_form_urlencode {
+    my $it = natatime 2 => @_;
+    my @params;
+    while ( my ( $key, $val ) = $it->() ) {
+        next unless $key;
+        $val ||= '';
+        push @params => url_encode($key) . '=' . url_encode($val);
+    }
+    join '&' => @params;
+}
+
 sub _post {
-    my ( $self, %query ) = @_;
-    die 'UNIMPLEMENTED';
+    my ( $self, @query ) = @_;
     $self->{error} = undef;
-    $self->_uri->path('/pks/lookup');
-    my $cv = AE::cv;
-    http_post $self->_uri, \%query, (), sub {
-        my ( $body, $hdr ) = @_;
-        if ( $hdr->{Status} ne '200' ) {
-            $self->{error} = sprintf 'HTTP %d: %s', $hdr->{Status},
-              $hdr->{Reason};
-            $cv->send;
+    $self->_uri->path('/pks/add');
+    my $body = _x_www_form_urlencode(@query);
+    my $cv   = AE::cv;
+    AE::log debug => "POST " . $self->_uri;
+    http_request(
+        POST    => $self->_uri,
+        body    => $body,
+        headers => { 'Content-Type' => 'application/x-www-form-urlencoded' },
+        sub {
+            my ( $body, $hdr ) = @_;
+            if ( $hdr->{Status} ne '200' ) {
+                $self->{error} = sprintf 'HTTP %d: %s', $hdr->{Status},
+                  $hdr->{Reason};
+                AE::log error => $self->{error};
+                $cv->send;
+            }
+            else {
+                $cv->send($body);
+            }
         }
-        else {
-            $cv->send($body);
-        }
-    };
+    );
     $cv->recv;
 }
 
