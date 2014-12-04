@@ -97,21 +97,9 @@ sub _get {
 
 sub _post {
     my ( $self, %query ) = @_;
+    die 'UNIMPLEMENTED';
     $self->{error} = undef;
     $self->_uri->path('/pks/lookup');
-    my $response = $self->_ua->post( $self->_uri, \%query );
-    if (    defined $response
-        and ref $response
-        and $response->isa('HTTP::Response')
-        and $response->is_success )
-    {
-        return $response->decoded_content;
-    }
-    else {
-        $self->{error} = $response->status_line;
-        return;
-    }
-
     my $cv = AE::cv;
     http_post $self->_uri, \%query, (), sub {
         my ( $body, $hdr ) = @_;
