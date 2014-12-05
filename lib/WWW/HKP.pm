@@ -12,6 +12,7 @@ use URI 1.60;
 use URI::Escape 3.31;
 use List::MoreUtils qw(natatime);
 use URL::Encode qw(url_encode);
+use Email::Address;
 
 # VERSION
 
