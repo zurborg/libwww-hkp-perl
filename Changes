@@ -10,6 +10,7 @@ Revision history for WWW-HKP
  - fix index operation
  - new method: import_keys()
  - extend method submit()
+ - new function: discover
 
 0.040 2014-11-29
  - change version format
