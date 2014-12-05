@@ -6,6 +6,7 @@ package WWW::HKP;
 # ABSTRACT: Interface to HTTP Keyserver Protocol (HKP)
 
 use AnyEvent;
+use AnyEvent::DNS;
 use AnyEvent::HTTP qw(http_request);
 use Carp;
 use URI 1.60;
@@ -69,6 +70,44 @@ sub new {
     };
 
     return bless $self => ( ref $class || $class );
+}
+
+=func discover($email, %options)
+
+Discover a corresponding HKP server via SRV lookup and query the server for public keys. C<%options> will be passed to in I<index> operation of the L</query> method.
+
+When no server could be discovered, C<undef> will be returned.
+
+	my $result = WWW::HKP::discover('foo@bar', fingerprint => 1);
+
+=cut
+
+sub discover {
+    my ( $email, %options ) = @_;
+    ($email) = Email::Address->parse($email)
+      unless ref $email eq 'Email::Address';
+    return unless $email;
+    my $cv = AE::cv;
+    AE::log debug => "srv query: _hkp._tcp." . $email->host;
+    AnyEvent::DNS::srv 'hkp', 'tcp', $email->host, sub {
+        foreach my $rr (@_) {
+            my ( $prio, $weight, $port, $host ) = @$rr;
+            AE::log debug =>
+              "srv answer: $host:$port (prio $prio weight $weight)";
+            my $hkp = __PACKAGE__->new(
+                host   => $host,
+                port   => $port,
+                secure => ( $port == 443 ? 1 : 0 )
+            );
+            my $result =
+              $hkp->query( index => $email->address, exact => 1, %options );
+            $cv->send($result) if $result;
+            AE::log debug => "no result, next...";
+        }
+        AE::log debug => "no success";
+        $cv->send(undef);
+    };
+    $cv->recv;
 }
 
 sub _ua  { shift->{ua} }
