@@ -1,6 +1,8 @@
 Revision history for WWW-HKP
 
 {{$NEXT}}
+
+0.041 2015-09-08
  - use Dist::Zilla::PluginBundle::ZURBORG
  - various fixes for passing Perl::Critic tests
  - tidy up code
@@ -60,4 +62,3 @@ Revision history for WWW-HKP
  - added unit testing
  - adding whitespace for correct handling of verbatim pod block
  - changed distname to project name (debian-like)
-
